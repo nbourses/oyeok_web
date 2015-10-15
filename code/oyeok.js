@@ -51,7 +51,7 @@ $(document).ready(function(){
 				//alert("failed Data :- ");
 				console.log(data);
 			}
-		});//*/
+		});
 	});
 	//change no button click
 	$("#change_no").click( function() {
@@ -65,6 +65,60 @@ $(document).ready(function(){
 //$("#info_panel").show();
 //$("#switch_tabs").show();
 
+	$(".go_ok").click(function(){
+		//the CSS changes
+		$("#switch_tabs").show();
+		$("#info_panel").hide();
+		$("#oye_container").hide();
+		$("#ok_container").show();
+		$(".go_oye_tab").addClass("not_selected_tab");
+		$(".go_ok_tab").addClass("selected_tab");
+
+		//e.preventDefault();
+		$.ajax({
+	    url      : 'ok.php',//note that this is setting the `url` property to the value of the `url` variable
+	    data     : $("#to_send_otp").serialize(),
+	    dataType : 'json',
+	    type     : 'post',
+	    success  : function(Result){
+			console.log(Result);		
+			alert(Result.responseData[0].name);
+			alert(Result.responseData[2].mobile_no);
+	        },
+		error: function(Result) {
+			alert('An error occurred');
+			console.log(Result);
+			}
+	    });
+	});
+
+	$(".go_ok_tab").click(function(){
+		//the CSS changes
+		$(".go_oye_tab").addClass("not_selected_tab");
+		$(".go_oye_tab").removeClass("selected_tab");
+		$("#oye_container").hide();
+		$("#ok_container").show();
+		$(this).addClass("selected_tab");
+		$(this).removeClass("not_selected_tab");
+
+		//e.preventDefault();
+		$.ajax({
+	    url      : 'ok.php',//note that this is setting the `url` property to the value of the `url` variable
+	    data     : $("#to_send_otp").serialize(),
+	    dataType : 'json',
+	    type     : 'post',
+	    success  : function(Result){
+			console.log(Result);		
+			alert(Result.responseData[0].name);
+			alert(Result.responseData[2].mobile_no);
+	        },
+		error: function(Result) {
+			alert('An error occurred');
+			console.log(Result);
+			}
+	    });
+	});
+
 	$(".go_oye").click(function(){
 		$("#switch_tabs").show();
 		$("#info_panel").hide();
@@ -72,24 +126,6 @@ $(document).ready(function(){
 		$("#oye_container").show();
 		$(".go_ok_tab").addClass("not_selected_tab");
 		$(".go_oye_tab").addClass("selected_tab");
-	});
-
-	$(".go_ok").click(function(){
-		$("#switch_tabs").show();
-		$("#info_panel").hide();
-		$("#oye_container").hide();
-		$("#ok_container").show();
-		$(".go_oye_tab").addClass("not_selected_tab");
-		$(".go_ok_tab").addClass("selected_tab");
-	});
-
-	$(".go_ok_tab").click(function(){
-		$(".go_oye_tab").addClass("not_selected_tab");
-		$(".go_oye_tab").removeClass("selected_tab");
-		$("#oye_container").hide();
-		$("#ok_container").show();
-		$(this).addClass("selected_tab");
-		$(this).removeClass("not_selected_tab");
 	});
 
 	$(".go_oye_tab").click(function(){
