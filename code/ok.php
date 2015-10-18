@@ -5,7 +5,9 @@ include 'config.php';
 	$myCurl = "curl 52.25.136.179:9000/1/web/preok -d '". json_encode($json)."' -H 'Content-Type: application/json'";
   $reply = shell_exec($myCurl);
 
- /*$json = '{
+ /* Expected reply
+
+ $json = '{
   "responseData": [
     {
       "mobile_no": "8483014575",

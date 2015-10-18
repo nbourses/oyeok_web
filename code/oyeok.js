@@ -81,9 +81,18 @@ $(document).ready(function(){
 	    dataType : 'json',
 	    type     : 'post',
 	    success  : function(Result){
-			console.log(Result);		
-			alert(Result.responseData[0].name);
-			alert(Result.responseData[2].mobile_no);
+			//console.log(Result);		
+			//alert(Result.responseData[0].name);
+			//alert(Result.responseData[2].mobile_no);
+			$("#ok_container_row").html("");
+			var append_text = "";
+	        $.each( Result.responseData, function( index, value ){
+			    //console.log(value.name);
+			    append_text ='<div class="col-xs-6 "><div class="bs-component"><div class="well well-lg theoks">';
+			    append_text = append_text.concat(value.name,'<br>',value.spec_code,'</div></div></div>');
+			    $("#ok_container_row").append(append_text);
+			   // console.log(append_text);
+			});
 	        },
 		error: function(Result) {
 			alert('An error occurred');
@@ -108,9 +117,18 @@ $(document).ready(function(){
 	    dataType : 'json',
 	    type     : 'post',
 	    success  : function(Result){
-			console.log(Result);		
-			alert(Result.responseData[0].name);
-			alert(Result.responseData[2].mobile_no);
+				
+			//alert(Result.responseData[0].name);
+			//alert(Result.responseData[2].mobile_no);
+			$("#ok_container_row").html("");
+			var append_text = "";
+	        $.each( Result.responseData, function( index, value ){
+			    //console.log(value.name);
+			    append_text ='<div class="col-xs-6 "><div class="bs-component"><div class="well well-lg theoks">';
+			    append_text = append_text.concat(value.name,'<br>',value.spec_code,'</div></div></div>');
+			    $("#ok_container_row").append(append_text);
+			   // console.log(append_text);
+			});
 	        },
 		error: function(Result) {
 			alert('An error occurred');

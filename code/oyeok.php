@@ -202,8 +202,8 @@
     	</div>
     	<!--OK Container strats-->
     	<div id="ok_container"  class="container" style="display:none">
-    		<div id="ok_container_row">
-		    	<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test    
+    		<div id="ok_container_row" class="row">
+
 	        </div>
     	</div>
     </body>
