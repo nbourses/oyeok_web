@@ -1,8 +1,8 @@
 <?php
 	include 'config.php';
-	//$phone_no = "918657753917";
-	//$lat="12";
-	//$long="34";
+	/*$phone_no = "918657753917";
+	$lat="12";
+	$long="34";*/
 	$phone_no = $_POST['phone_no'];
 	$lat = $_POST["lat"];
 	$long= $_POST["long"];
@@ -24,9 +24,9 @@
 	$sql = "INSERT INTO Web_Authentication (id, phone_no, link, latitude, longitude) VALUES ('NULL', $phone_no, '$rand', '$lat', '$long')";
 	//echo $sql;
 	if ($conn->query($sql) === TRUE) {
-	    //echo "New record created successfully";
+	    echo "New record created successfully";
 	} else {
-	    //echo "Error: " . $sql . "<br>" . $conn->error;
+	    echo "Error: " . $sql . "<br>" . $conn->error;
 	}
 
 	$conn->close();
@@ -39,8 +39,44 @@
 			global $phone_no;
 			global $rand;
 			
-			//$msg_url = 'http://oyeok.com/oyeok.php?mob_no='.$phone_no.'?rand='.$rand.'';
-	//echo $msg_url;
+			
+			//exotel
+			
+			
+			$post_data = array(
+    'From'   => '8808891988',
+    'To'    => $phone_no,
+    'Priority' => 'high',
+    'Body'  => 'OTP from OyeOK = '.$rand.'. Thank you for registering',
+);
+ 
+$exotel_sid = "nexchanges1"; 
+$exotel_token = "5347ce6a334ccc65d2ac9612dd4814824dc9e618";
+ 
+$url = "https://".$exotel_sid.":".$exotel_token."@twilix.exotel.in/v1/Accounts/".$exotel_sid."/Sms/send";
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_VERBOSE, 1);
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_FAILONERROR, 0);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+ 
+$http_result = curl_exec($ch);
+echo $http_result;
+$error = curl_error($ch);
+echo $error;
+$http_code = curl_getinfo($ch ,CURLINFO_HTTP_CODE);
+ 
+curl_close($ch);
+			
+			
+			
+			
+	/*		
+			
 		
 		$url = 'https://rest.nexmo.com/sms/json?' . http_build_query([
 	    'api_key' => de1cc5e1,
@@ -54,11 +90,12 @@
 	print file_get_contents($url);
 	 
 	//$url = 'http://example.com';
-	/*$ch = curl_init($url);
+	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	$result = curl_exec($ch);
 	echo $result;
-	curl_close ($ch);*/
+	curl_close ($ch);
+	*/
 	return;
 	}	
 
@@ -68,8 +105,8 @@
 	 if(isset($_POST['phone_no']))
 	{
 	echo "1";
-    //$t=sendMsg();
-    //echo $t;
+    $t=sendMsg();
+    echo $t;
 }
 	else
 	{

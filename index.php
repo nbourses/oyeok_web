@@ -122,9 +122,7 @@
 							function changelocation(lat,lng){
 							$('#location_picker').locationpicker({
 							                            location: {latitude: lat, longitude: lng},
-							                            radius: 500,
-													    zoom: 15,
-													    scrollwheel: false,
+							                            radius: 300,
 							                           	inputBinding: {
 				                                                           latitudeInput: $('#modal_lat'),
 				                                                           longitudeInput: $('#moda_lng'),

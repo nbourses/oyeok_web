@@ -1,7 +1,7 @@
 <?php
 	$servername = "localhost";                                             
-	$username = "root";
-	$password = "root";
-	$dbname = "OyeOK";
+	$username = "oyeoyxir_root";
+	$password = "Qwerty123$";
+	$dbname = "oyeoyxir_oyeok";
 	
 ?>
