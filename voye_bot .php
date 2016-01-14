@@ -63,6 +63,10 @@ $nam = "\xF0\x9F\x99\x8F";
 $invcomma = "\xE2\x81\xA3";
 $earth = "\xF0\x9F\x8C\x8D";
 $back = "\xF0\x9F\x94\x99";
+/* if(c==10 && !(lat) && !(long)){
+ $message = "Location";
+ }
+ */
  
   if($message == $rocket."start"){
   $message = "/start";
@@ -225,7 +229,7 @@ switch($message){
 
  case "Location":
      if($c == 4 && $location){
-       
+       // fetchData($chatId,$location);
        controller($chatId);
        sendMessage($chatId,urlencode("Please select transaction type.".$c), $ttypeMarkup);
        
@@ -849,12 +853,30 @@ case "1".$invcomma:
    if(preg_match('/^[7-9][0-9]{9}$/',$message)){
    
    $path = 'voyevars.json';
- 
+  
     $myVarsJson = file_get_contents($path);
     
     $myVarsArr = json_decode($myVarsJson,true);
-        
-        if(array_key_exists($message,$myVarsArr[password])){
+	if($myVarsArr["savepass"][$chatId] == $message){
+	$c = 50;
+	$path = 'voyevars.json';
+  
+    $myVarsJson = file_get_contents($path);
+    
+    $myVarsArr = json_decode($myVarsJson,true);
+	$myVarsArr["controller"][$chatId] = $c;
+    
+    $myVarsJson = json_encode($myVarsArr);
+    file_put_contents($path, $myVarsJson);
+     
+	 sendMessage($chatId,$rightarr." Please enter client's name ".$c);
+     
+	 
+	 //sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
+      goto end;
+	
+	}
+        elseif(array_key_exists($message,$myVarsArr[password])){
         $path = 'voyevars.json';
         $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -876,13 +898,60 @@ goto end;
 
 }
         
-  
+        
+   //sendOtp($chatId,urlencode("We have sent you a 4 digit OTP.\n\n Please enter your 4 digit OTP to complete verification."),$message);
+//sendMessage($chatId,urlencode($rightarr." We have sent you a 4 digit OTP.\n\n".$rightarr." Please enter your 4 digit OTP and SEND to complete verification.\n\n".$rightarr." To change mobile number click on  ".$tel."Change No. button below".$c),$changeNoMarkup);
+        // goto end;
    
    } else {
        sendMessage($chatId,urlencode("You entered invalid mobile number number. \n\n Enter your 10 digit mobile number and send to recieve OTP."));
           goto end; 
    }
    }
+ elseif($c == 50){ 
+if(preg_match("/^[a-z,A-Z ,.'-]+$/",$message)){
+ $path = 'voyevars.json';
+        $myVarsJson = file_get_contents($path);
+    $myVarsArr = json_decode($myVarsJson,true);
+  
+    $myVarsArr["cname"][$chatId] = $message;
+    	
+   $myVarsJson = json_encode($myVarsArr);
+   file_put_contents($path, $myVarsJson);
+   controller($chatId);
+   sendMessage($chatId,urlencode("Enter clients mobile number."));
+     goto end;
+       } else{
+		   sendMessage($chatId,urlencode("Name you entered is invalid, please enter again."));
+	  goto end;
+	  }
+ }  
+ 
+ elseif($c == 51){ 
+if(preg_match('/^[7-9][0-9]{9}$/',$message)){
+   
+   $path = 'voyevars.json';
+  
+    $myVarsJson = file_get_contents($path);
+    
+    $myVarsArr = json_decode($myVarsJson,true);
+	
+	$c = 4;
+	
+	$myVarsArr["cmob_no"][$chatId] = $message;
+	$myVarsArr["controller"][$chatId] = $c;
+    
+    $myVarsJson = json_encode($myVarsArr);
+    file_put_contents($path, $myVarsJson);
+     
+	 sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
+   goto end; 
+ }  else{
+	 sendMessage($chatId,urlencode("Mobile no you entered is invalid, please enter again."));
+	 goto end;
+ }
+ }
+ 
  elseif($c == 3){ 
     $path = 'voyevars.json';
         $myVarsJson = file_get_contents($path);
@@ -890,11 +959,15 @@ goto end;
   
      $mob_no = $myVarsArr["chat_id"][$chatId];
     
-    
- 
- 
-    if($myVarsArr[password][$mob_no]==$message){
-         
+    if($myVarsArr["password"][$mob_no]==$message){
+	$path = 'voyevars.json';
+        $myVarsJson = file_get_contents($path);
+    $myVarsArr = json_decode($myVarsJson,true);
+  
+    $myVarsArr["savepass"][$chatId] = $mob_no;
+    	
+   $myVarsJson = json_encode($myVarsArr);
+   file_put_contents($path, $myVarsJson);
       
      controller($chatId);
      sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
@@ -916,7 +989,7 @@ goto end;
 
 elseif($c == 9){
    if(preg_match('/^[1-9][0-9]{4,8}$/',$message)){
-  
+  // sendOtp($chatId,urlencode("We have sent you a 4 digit OTP.\n\n Please enter your 4 digit OTP to complete verification."),$message);
 
      controller($chatId);
      // $c = 4;
@@ -929,7 +1002,8 @@ elseif($c == 9){
     //$myVarsArr["controller"][$chatId] = $c;
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
-	
+	$cname = $myVarsArr["cname"][$chatId];
+	$cmob_no = $myVarsArr["cmob_no"][$chatId];
 	$ttype = $myVarsArr["ttype"][$chatId];
 	$intend = $myVarsArr["intend"][$chatId];
 	$ptype = $myVarsArr["ptype"][$chatId];
@@ -937,27 +1011,68 @@ elseif($c == 9){
 	if($ptype == "House"){
 		
 		$bhk = $myVarsArr["bhk"][$chatId];
-		$txt = urlencode("Hi".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No. of rooms: ".$bhk."\n".$rightarr." Budget: ".$budget."\n");
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No. of rooms: ".$bhk."\n".$rightarr." Budget: ".$budget."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtobudgetMarkup);
+		goto end;	
+	}
+	elseif($ptype == "Shop"){
+		
+		$shoptype = $myVarsArr["shoptype"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Shop type: ".$shoptype."\n".$rightarr." Budget: ".$budget."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtobudgetMarkup);
+		goto end;	
+	}
+	elseif($ptype == "Office"){
+		
+		$seats = $myVarsArr["seats"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No of seats: ".$seats."\n".$rightarr." Budget: ".$budget."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtobudgetMarkup);
+		goto end;	
+	}
+	elseif($ptype == "Industrial"){
+		
+		$indtype = $myVarsArr["indtype"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Type: ".$indtype."\n".$rightarr." Budget: ".$budget."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtobudgetMarkup);
+		goto end;	
+	}
+	elseif($ptype == "Other"){
+		
+		$requirements = $myVarsArr["requirements"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Requirements: ".$requirements."\n".$rightarr." Budget: ".$budget."\n");
  
  
     sendMessage($chatId,$txt,$backtobudgetMarkup);
 		goto end;	
 	}
 	
+	
     sendMessage($chatId,"Verify your detais.",$backtobudgetMarkup);
 	
 
          goto end;
    
-   } else {
+   } 
+   
+  
+   else {
        sendMessage($chatId,urlencode("You entered invalid budget.Please enter again.\n\n It should be in rupees, in range of(10000-999999999) \n ".$rightarr." For eg. 35000\n\n ".$rightarr."Click on  ".$rocket."start button below if you want to start once again."),$startMarkup);
           goto end; 
-   }
+ 
+ }  
    }
 
 elseif($c == -4){
    if(preg_match('/^[1-9][0-9]{1,2}$/',$message)){
-
+  // sendOtp($chatId,urlencode("We have sent you a 4 digit OTP.\n\n Please enter your 4 digit OTP to complete verification."),$message);
 
 
  $path = 'voyevars.json';
@@ -1230,9 +1345,9 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
  
 $http_result = curl_exec($ch);
-
+//echo $http_result;
 $error = curl_error($ch);
-
+//echo $error;
 $http_code = curl_getinfo($ch ,CURLINFO_HTTP_CODE);
  
 curl_close($ch);
@@ -1248,7 +1363,7 @@ $path = 'voyevars.json';
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
     controller($chatId);		
-		
+//sendMessage($chatId,$GLOBALS[santa]."yo man".$GLOBALS[c]);			
 	
 	return;	
 
@@ -1263,7 +1378,7 @@ $path = 'voyevars.json';
     $url = 'http://52.25.136.179:9000/1/web/preok/';    
     
 $data = array('user_role'=>'broker','gcm_id'=>'$chatId','long'=>$long,'lat'=>$lat,'device_id'=>"telegram");
- 
+  //  {"user_role":"broker", "gcm_id": "gyani","long":72.8356868, "lat":19.123057,"device_id":"hardware"}
 $content = json_encode($data);
 
 $curl = curl_init($url);
