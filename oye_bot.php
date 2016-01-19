@@ -1,6 +1,6 @@
 <?php
 
-$tok ="127856919:AAFrmxafGUy9-UvzWrz894F3s1PTcKdYTMI";
+$tok ="179379956:AAGTtya6g5q0m-I04Uom9zZx3TFKTGc5FPo";
  $site = "https://api.telegram.org/bot".$tok;
 
  $update = file_get_contents("php://input");
@@ -25,7 +25,7 @@ if($location){
 
 $message = "Location";
    if($c == 4){
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -36,7 +36,6 @@ $message = "Location";
     file_put_contents($path, $myVarsJson);
 }
 }
-$unglileft = "\xF0\x9F\x91\x88";
 $plus = "\xE2\x9E\x95";
 $tel = "\xF0\x9F\x93\x9E";
 $money = "\xF0\x9F\x92\xB0";
@@ -61,9 +60,10 @@ $globe = "\xF0\x9F\x8C\x90";
 $lol = "\xF0\x9F\x98\x86";
 $nam = "\xF0\x9F\x99\x8F";
 $invcomma = "\xE2\x81\xA3";
-$earth = "\xF0\x9F\x8C\x8D";
-$back = "\xF0\x9F\x94\x99";
-
+/* if(c==10 && !(lat) && !(long)){
+ $message = "Location";
+ }
+ */
  
   if($message == $rocket."start"){
   $message = "/start";
@@ -75,21 +75,21 @@ $back = "\xF0\x9F\x94\x99";
  
  $ptypeMarkup = array(
     'keyboard' => array(
-        array("House", "Shop"),array("Office", "Industrial"),array("Other", $back." to intend")
+        array("House", "Shop"),array("Office", "Industrial"),array("Other")
     ),'resize_keyboard' => True,'one_time_keyboard' => True
 );
 $ptypeMarkup = json_encode($ptypeMarkup);
 
 $ttypeMarkup = array(
     'keyboard' => array(
-        array("Rental", "Sale"),array("Under Construction Project"),array("Ready Possession Project"),array("Loan", "Auction",$unglileft." Back ".$earth)
+        array("Rental", "Sale"),array("Loan", "Auction"),array("Under Construction Project"),array("Ready Possession Project")
     ),'resize_keyboard' => True,'one_time_keyboard' => True
 );
 $ttypeMarkup = json_encode($ttypeMarkup);
 
 $bhkMarkup = array(
     'keyboard' => array(
-        array("1bhk", "2bhk"),array("3bhk","4".$plus."bhk"),array($back." to property type")
+        array("1bhk", "2bhk"),array("3bhk","4".$plus."bhk")
     ),'resize_keyboard' => True,'one_time_keyboard' => True
 );
 $bhkMarkup = json_encode($bhkMarkup);
@@ -110,9 +110,8 @@ $changeNoMarkup = json_encode($changeNoMarkup);
  
  $seeshowMarkup = array(
     'keyboard' => array(
-        array("Give Property".$invcomma),
-        array("Take Property".$invcomma),
-		array($back. "to transaction type"),
+        array("See Property".$invcomma),
+        array("Show Property".$invcomma)
     ),'resize_keyboard' => True,'one_time_keyboard' => True
 );
 $seeshowMarkup = json_encode($seeshowMarkup);
@@ -141,63 +140,33 @@ $blankMarkup = json_encode($blankMarkup);
 
 $shoptypeMarkup = array(
     'keyboard' => array(
-        array("Retail", "Food outlet"),array("Bank/office"),array($back." to property type")
+        array("Retail", "Food outlet"),array("Bank/office")
     ),'resize_keyboard' => True,'one_time_keyboard' => True
 );
 $shoptypeMarkup = json_encode($shoptypeMarkup);
 
 $indtypeMarkup = array(
     'keyboard' => array(
-        array("Cold storage", "Kitchen"),array("Warehouse", "Office space"),array("Manufacturing", "Workshop"),array($back." to property type")
+        array("Cold storage", "Kitchen"),array("Warehouse", "Office space"),array("Manufacturing", "Workshop")
     ),'resize_keyboard' => True,'one_time_keyboard' => True
 );
 $indtypeMarkup = json_encode($indtypeMarkup);
  
-$backtoptypeMarkup = array(
-    'keyboard' => array(
-      array($back." to property type".$invcomma)
-    ),'resize_keyboard' => True,'one_time_keyboard' => True
-);
-$backtoptypeMarkup = json_encode($backtoptypeMarkup); 
-
-$backtobhkMarkup = array(
-    'keyboard' => array(
-      array($back." to rooms".$invcomma)
-    ),'resize_keyboard' => True,'one_time_keyboard' => True
-);
-$backtobhkMarkup = json_encode($backtobhkMarkup);
-
-$backtoshopMarkup = array(
-    'keyboard' => array(
-      array($back." to shoptype".$invcomma)
-    ),'resize_keyboard' => True,'one_time_keyboard' => True
-);
-$backtoshopMarkup = json_encode($backtoshopMarkup);
-
-$backtoseatsMarkup = array(
-    'keyboard' => array(
-      array($back." to seats".$invcomma)
-    ),'resize_keyboard' => True,'one_time_keyboard' => True
-);
-$backtoseatsMarkup = json_encode($backtoseatsMarkup);
-
-
  
 switch($message){
 
  
  case "/start":
        $c = 0;
-       $c=$c+2;
-       $path = 'voyevars.json';
+       $c++;
+       $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
     $myVarsArr["controller"][$chatId] = $c;
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
-   
-   sendMessage($chatId,urlencode($GLOBALS[rightarr]." Hi ".$fname.", Please enter your 10 digit mobile number.".$c));
+   userexists($chatId);
        break;
   
  
@@ -218,78 +187,13 @@ switch($message){
 case $money."Grab deal".$invcomma:
 sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
 break;
+   
 
-// all backs
-case $unglileft." Back ".$earth:
-thugcontroller($chatId);
-sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
-break;
-
-
-case $back. "to transaction type":
-thugcontroller($chatId);
-sendMessage($chatId,urlencode("Please select transaction type.".$c), $ttypeMarkup);
-break;
-
-
-case $back." to intend":
-thugcontroller($chatId);
-sendMessage($chatId,"Hey broker, I want to.".$c,$seeshowMarkup);
-break;
-case $back." to property type":
-thugcontroller($chatId);
-sendMessage($chatId,"Please select property type.".$c,$ptypeMarkup);
-break;  
-
-case $back." to rooms".$invcomma:
-thugcontroller($chatId);
-sendMessage($chatId,"Please select no. of rooms".$c,$bhkMarkup);
-break; 
-
-case $back." to shoptype".$invcomma:
-thugcontroller($chatId);
-sendMessage($chatId,"Please select no. of rooms".$c,$shoptypeMarkup);
-break;
-//back to no of seats
-
-case $back." to seats".$invcomma:
-
- $c = -4;
-    $path = 'voyevars.json';
- 
-    $myVarsJson = file_get_contents($path);
-    $myVarsArr = json_decode($myVarsJson,true);
-
-    $myVarsArr["controller"][$chatId] = $c;  
-    $myVarsJson = json_encode($myVarsArr);
-    file_put_contents($path, $myVarsJson);
-
-sendMessage($chatId,"Please enter no. of seats".$c,$backtoptypeMarkup);
-break;
-
-
-
-//back from no. of seats
-
-case $back." to property type".$invcomma:
-    $c = 7;
-    $path = 'voyevars.json';
- 
-    $myVarsJson = file_get_contents($path);
-    $myVarsArr = json_decode($myVarsJson,true);
-
-    $myVarsArr["controller"][$chatId] = $c;  
-    $myVarsJson = json_encode($myVarsArr);
-    file_put_contents($path, $myVarsJson);
- 
-sendMessage($chatId,"Please select property typer.".$c,$ptypeMarkup);
-break;  
-
-case "Take Property".$invcomma:     
+case "See Property".$invcomma:     
    if($c == 6){
        controller($chatId);
-      saveintend($chatId,"Take Property");
-     sendMessage($chatId,"Please select property type.".$c,$ptypeMarkup);
+      saveintend($chatId,"See Property");
+     sendMessage($chatId,"Please select transaction type.".$c,$ptypeMarkup);
        goto end;
       }
       else{
@@ -299,11 +203,11 @@ case "Take Property".$invcomma:
       
        break;  
    
-  case "Give Property".$invcomma:     
+  case "Show Property".$invcomma:     
    if($c == 6){
        controller($chatId);
-      saveintend($chatId,"Give Property");
-     sendMessage($chatId,"Please select property type.".$c,$ptypeMarkup);
+      saveintend($chatId,"Show Property");
+     sendMessage($chatId,"Please select transaction type.".$c,$ptypeMarkup);
        goto end;
       }
       else{
@@ -426,11 +330,11 @@ case "Take Property".$invcomma:
       
        break;  
        
-       case "Office":
+       case "Office":     
    if($c == 7){
        
        $GLOBALS[c] = $GLOBALS[c] - 11;
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -440,7 +344,7 @@ case "Take Property".$invcomma:
     file_put_contents($path, $myVarsJson);
       
        saveptype($chatId,Office);
-       sendMessage($chatId,"Enter no. of seats".$c,$backtoptypeMarkup);
+       sendMessage($chatId,"Enter no. of seats".$c,$blankMarkup);
        goto end;
       }
       else{
@@ -469,7 +373,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveshoptype($chatId,Retail);
-       sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoshopMarkup);
+       sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c);
        goto end;
       }
       else{
@@ -483,7 +387,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveshoptype($chatId,"Food outlet");
-       sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoshopMarkup);
+       sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c);
        goto end;
       }
       else{
@@ -497,7 +401,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveshoptype($chatId,"Bank/office");
-       sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoshopMarkup);
+       sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c);
        goto end;
       }
       else{
@@ -595,7 +499,7 @@ case "Take Property".$invcomma:
    case "Other":     
    if($c == 7){
        $GLOBALS[c] = $GLOBALS[c] - 10;
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -625,7 +529,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        savebhk($chatId,"1bhk");
-       sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$backtobhkMarkup);
+       sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$budgetMarkup);
        goto end;
       }
       else{
@@ -638,7 +542,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        savebhk($chatId,"2bhk");
-       sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$backtobhkMarkup);
+       sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$budgetMarkup);
        goto end;
       }
       else{
@@ -652,7 +556,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        savebhk($chatId,"3bhk");
-       sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$backtobhkMarkup);
+       sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$budgetMarkup);
        goto end;
       }
       else{
@@ -665,7 +569,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        savebhk($chatId,"4+bhk");
-       sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$backtobhkMarkup);
+       sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$budgetMarkup);
        goto end;
       }
       else{
@@ -769,91 +673,63 @@ case "1".$invcomma:
  
    if($c == 2){
    if(preg_match('/^[7-9][0-9]{9}$/',$message)){
-   
-   $path = 'voyevars.json';
- 
-    $myVarsJson = file_get_contents($path);
-    
-    $myVarsArr = json_decode($myVarsJson,true);
-        
-        if(array_key_exists($message,$myVarsArr[password])){
-        $path = 'voyevars.json';
-        $myVarsJson = file_get_contents($path);
-    $myVarsArr = json_decode($myVarsJson,true);
-  
-    $myVarsArr["chat_id"][$chatId] = $message;
-    
-    $myVarsJson = json_encode($myVarsArr);
-    file_put_contents($path, $myVarsJson);
-        
-        
-        controller($chatId);
-sendMessage($chatId,urlencode($rightarr."Please enter your password below(case sensitive).\n\n".$rightarr." To change mobile number click on  ".$tel."Change No. button below".$c),$changeNoMarkup);
-
-goto end; 
-}
-else{
-sendMessage($chatId,urlencode("This mobile no. is not authorized".$youmadbro." Please enter your authorized 10 digit mobile no."), $changeNoMarkup);
-goto end; 
-
-}
-        
-        
-   
+   sendOtp($chatId,urlencode("We have sent you a 4 digit OTP.\n\n Please enter your 4 digit OTP to complete verification."),$message);
+sendMessage($chatId,urlencode($rightarr." We have sent you a 4 digit OTP.\n\n".$rightarr." Please enter your 4 digit OTP and SEND to complete verification.\n\n".$rightarr." To change mobile number click on  ".$tel."Change No. button below".$c),$changeNoMarkup);
+         goto end;
    
    } else {
        sendMessage($chatId,urlencode("You entered invalid mobile number number. \n\n Enter your 10 digit mobile number and send to recieve OTP."));
           goto end; 
    }
    }
- elseif($c == 3){ 
-    $path = 'voyevars.json';
-        $myVarsJson = file_get_contents($path);
+ elseif($c == 3){
+    if(is_numeric($message) && (strlen($message) == 4)){
+    $path = 'vars.json';
+ 
+ $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
-  
-     $mob_no = $myVarsArr["chat_id"][$chatId];
-    
-    
+
  
+    $mob_no = $myVarsArr["chat_id"][$chatId];
+    $otp = $myVarsArr["otp"][$mob_no];      
  
-    if($myVarsArr[password][$mob_no]==$message){
-         
-  
       
      controller($chatId);
-     sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
-      goto end;
       
-    }  
+      if($message == $otp){
+       sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
+      goto end;
+      }
       
       else{
       // Reduce c by one here
       thugcontroller($chatId);
       
-      sendMessage($chatId,urlencode("Password you entered is wrong. \n\n Please, Enter again, or click on  ".$rocket."start to initiate mobile verification process once again".$c), $startMarkup);
+      sendMessage($chatId,urlencode("Varification code you entered is wrong. \n\n Please, Enter again, or click on  ".$rocket."start to initiate mobile verification process once again".$c), $startMarkup);
       goto end;
       }	
     
     
+    } else {
+      
+       sendMessage($chatId,urlencode("Varification code you entered is invalid. \n\n Please, Enter again, or click on ".$rocket."start to initiate mobile verification process once again".$c), $startMarkup);
+    goto end;
     } 
-   
+}   
 
 elseif($c == 9){
    if(preg_match('/^[1-9][0-9]{4,8}$/',$message)){
-  
-      $c = 4;
- $path = 'voyevars.json';
+ sendMessage($chatId,urlencode($rightarr." Thanks, our broaker will serve you very soon".$c),$blankMarkup);
+
+ $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
-    
+
     $myVarsArr["budget"][$chatId] = $message;
-    $myVarsArr["controller"][$chatId] = $c;
-    $c = $myVarsArr["controller"][$chatId];
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
-	
-    sendMessage($chatId,urlencode($rightarr." Info added succesfully! \n Share location again to insert new data \n\n To end visit click on end button below".$c),$endMarkup);
+    controller($chatId);
          goto end;
    
    } else {
@@ -866,7 +742,7 @@ elseif($c == -4){
    if(preg_match('/^[1-9][0-9]{1,2}$/',$message)){
   
 
- $path = 'voyevars.json';
+ $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -875,7 +751,7 @@ elseif($c == -4){
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
     $c = 9;
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -883,7 +759,7 @@ elseif($c == -4){
     $myVarsArr["controller"][$chatId] = $c;  
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
-    sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoseatsMarkup);
+    sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c);
          goto end;
    
    } else {
@@ -895,7 +771,7 @@ elseif($c == -4){
 
 elseif($c == -3){
 
-$path = 'voyevars.json';
+$path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -904,7 +780,7 @@ $path = 'voyevars.json';
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
     $c = 9;
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -942,7 +818,7 @@ sendMessage($chatId,$GLOBALS[santa]."Howdy ".$name."? Wanna get some hot deals t
 
 function controller($chatId){
     $GLOBALS[c]++;
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -954,7 +830,7 @@ function controller($chatId){
    }
  	
 function yocontroller($chatId){
-     $path = 'voyevars.json';
+     $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -965,7 +841,7 @@ function yocontroller($chatId){
 
  function thugcontroller($chatId){
      $GLOBALS[c]--;
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -977,7 +853,7 @@ function yocontroller($chatId){
  
  function savebhk($chatId,$bhk){
      
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -989,7 +865,7 @@ function yocontroller($chatId){
  
  function saveshoptype($chatId,$type){
      
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -1001,7 +877,7 @@ function yocontroller($chatId){
  
  function saveindtype($chatId,$type){
      
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -1013,7 +889,7 @@ function yocontroller($chatId){
  
   function saveintend($chatId,$intend){
      
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -1025,7 +901,7 @@ function yocontroller($chatId){
  
  function saveptype($chatId,$ptype){
      
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -1037,7 +913,7 @@ function yocontroller($chatId){
    
    function savettype($chatId,$ttype){
      
-    $path = 'voyevars.json';
+    $path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -1050,8 +926,7 @@ function yocontroller($chatId){
  
  function userexists($chatId){
 
-//Uncomment function after API is live
-/*
+/* 
 $url = 'http://52.25.136.179:9000/telegram/alive/';    
 
 $data = array('chat_id'=>$chatId,'platform'=>'Telegram');
@@ -1069,6 +944,8 @@ curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
 curl_setopt($curl, CURLOPT_IPRESOLVE, 'CURL_VERSION_IPV6');
 
 $json_response = curl_exec($curl); */
+
+// hardcoded json_response
 $json_response = '{
   "errors": [],
   "exceptions": [],
@@ -1096,7 +973,7 @@ $json_response = '{
  
  }
 
-$path = 'voyevars.json';
+$path = 'vars.json';
  
     $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -1136,14 +1013,14 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
  
 $http_result = curl_exec($ch);
-
+//echo $http_result;
 $error = curl_error($ch);
-
+//echo $error;
 $http_code = curl_getinfo($ch ,CURLINFO_HTTP_CODE);
  
 curl_close($ch);
 			
-$path = 'voyevars.json';
+$path = 'vars.json';
  
  $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
@@ -1169,7 +1046,8 @@ $path = 'voyevars.json';
     $url = 'http://52.25.136.179:9000/1/web/preok/';    
     
 $data = array('user_role'=>'broker','gcm_id'=>'$chatId','long'=>$long,'lat'=>$lat,'device_id'=>"telegram");
-  $content = json_encode($data);
+  
+$content = json_encode($data);
 
 $curl = curl_init($url);
 
@@ -1205,6 +1083,50 @@ sendMessage($chatId,$txt,$GLOBALS[leadMarkup]);
    }
    
    
-   
+   function ok($chatId,$okToken){
+      //Uncomment function when API gets live  
+ /*     
+    $url = 'http://52.25.136.179:9000/1/preok/telegram/ok';    
+    
+$data = array('chat_id'=>$chatId,'ok_token'=>$okToken);
+  //  {"chat_id":"1438743747945984","ok_token" :1}
+$content = json_encode($data);
+
+$curl = curl_init($url);
+
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_HEADER, false);
+ 
+curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/json"));
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
+curl_setopt($curl, CURLOPT_IPRESOLVE, 'CURL_VERSION_IPV6');
+
+$json_response = curl_exec($curl); 
+
+ $uarray = json_decode($json_response, TRUE);
+ 
+ 
+
+ $name1 = $uarray["responseData"][0]["name"];
+ $name2 = $uarray["responseData"][1]["name"];
+ $name3 = $uarray["responseData"][3]["name"];
+ 
+ $spec1 = $uarray["responseData"][0]["spec_code"];
+ $spec2 = $uarray["responseData"][1]["spec_code"];
+ $spec3 = $uarray["responseData"][3]["spec_code"];
+ 
+ $txt = urlencode("Click on the button below to grab deal \n\n 1.".$name1."-".$spec1."\n \n 2.".$name2."-".$spec2."\n \n 3.".$name3."-".$spec3);
+ 
+ controller($chatId);
+ sendMessage($chatId,$txt,$GLOBALS[leadMarkup]);
+ 
+ */
+ controller($chatId);
+ sendMessage($chatId,"Client's mobile no. is ______".$youmadbro);
+
+   }
+ 
+ 
  end:
  ?>
