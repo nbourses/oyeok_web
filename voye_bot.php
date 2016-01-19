@@ -1,11 +1,12 @@
 <?php
 
 $tok ="127856919:AAFrmxafGUy9-UvzWrz894F3s1PTcKdYTMI";
+$botan_token = "P6RUll-vhzhKoUdiEAKoE5PkQQjMV0qL";
  $site = "https://api.telegram.org/bot".$tok;
 
  $update = file_get_contents("php://input");
  $uarray = json_decode($update, TRUE);
- 
+ $ragnar = json_encode($uarray);
  
  $chatId = $uarray["message"]["chat"]["id"];
  $message = $uarray["message"]["text"];
@@ -205,6 +206,14 @@ $backtoreqMarkup = json_encode($backtoreqMarkup);
     ),'resize_keyboard' => True,'one_time_keyboard' => True
 );
 $backtobudgetMarkup = json_encode($backtobudgetMarkup);
+
+$backtospecsMarkup = array(
+    'keyboard' => array(
+      array($rocket."vOye".$invcomma,$back." to specs".$invcomma)
+    ),'resize_keyboard' => True,'one_time_keyboard' => True
+);
+$backtospecsMarkup = json_encode($backtospecsMarkup);
+ 
  
  
 switch($message){
@@ -221,6 +230,7 @@ switch($message){
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
    //userexists($chatId);
+   floki($chatId,start,$ragnar);
    sendMessage($chatId,urlencode($GLOBALS[rightarr]." Hi ".$fname.", Please enter your 10 digit mobile number.".$c));
        break;
   
@@ -231,6 +241,7 @@ switch($message){
      if($c == 4 && $location){
        // fetchData($chatId,$location);
        controller($chatId);
+	   floki($chatId,Location,$ragnar);
        sendMessage($chatId,urlencode("Please select transaction type.".$c), $ttypeMarkup);
        
      }else{
@@ -240,7 +251,31 @@ switch($message){
    break; 
    
 case $money."Grab deal".$invcomma:
+
 sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
+break;
+
+case $rocket."vOye".$invcomma:
+
+if($c == 11){
+vOye($chatId);
+
+$c = 4;
+    $path = 'voyevars.json';
+ 
+    $myVarsJson = file_get_contents($path);
+    $myVarsArr = json_decode($myVarsJson,true);
+
+    $myVarsArr["controller"][$chatId] = $c;  
+    $myVarsJson = json_encode($myVarsArr);
+    file_put_contents($path, $myVarsJson);
+
+sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
+
+}else{
+	sendMessage($chatId,$globe."this is an unexpected input.".$c,$startMarkup);
+
+}
 break;
 
 // all backs
@@ -279,6 +314,12 @@ break;
 case $back." to types".$invcomma:
 thugcontroller($chatId);
 sendMessage($chatId,"Please select type".$c,$indtypeMarkup);
+break;
+
+
+case $back." to specs".$invcomma:
+thugcontroller($chatId);
+sendMessage($chatId,"Please Enter Additional Specifications.".$c,$backtobudgetMarkup);
 break;
 
 
@@ -371,6 +412,7 @@ case "Take Property".$invcomma:
    if($c == 6){
        controller($chatId);
       saveintend($chatId,"Take Property");
+	
      sendMessage($chatId,"Please select property type.".$c,$ptypeMarkup);
        goto end;
       }
@@ -385,6 +427,7 @@ case "Take Property".$invcomma:
    if($c == 6){
        controller($chatId);
       saveintend($chatId,"Give Property");
+	   
      sendMessage($chatId,"Please select property type.".$c,$ptypeMarkup);
        goto end;
       }
@@ -399,6 +442,7 @@ case "Take Property".$invcomma:
    if($c == 5){
        controller($chatId);
        savettype($chatId,Rental);
+	   
        
       sendMessage($chatId,"Hey broker, I want to.".$c,$seeshowMarkup);
        goto end;
@@ -414,6 +458,7 @@ case "Take Property".$invcomma:
    if($c == 5){
        controller($chatId);
        savettype($chatId,Sale);
+	  
        sendMessage($chatId,"Hey broker, I want to.".$c,$seeshowMarkup);
        goto end;
       }
@@ -428,6 +473,7 @@ case "Take Property".$invcomma:
    if($c == 5){
        controller($chatId);
        savettype($chatId,Loan);
+	  
        sendMessage($chatId,"Hey broker, I want to.".$c,$seeshowMarkup);
        goto end;
       }
@@ -442,6 +488,7 @@ case "Take Property".$invcomma:
    if($c == 5){
        controller($chatId);
        savettype($chatId,Auction);
+	   
        sendMessage($chatId,"Hey broker, I want to.".$c,$seeshowMarkup);
        goto end;
       }
@@ -456,6 +503,7 @@ case "Take Property".$invcomma:
    if($c == 5){
        controller($chatId);
        savettype($chatId,"Under Construction Project");
+	   
        sendMessage($chatId,"Hey broker, I want to.".$c,$seeshowMarkup);
        goto end;
       }
@@ -469,7 +517,8 @@ case "Take Property".$invcomma:
    case "Ready Possession Project":     
    if($c == 5){
        controller($chatId);
-       savettype($chatId,"Under Construction Project");
+       savettype($chatId,"Ready Possession Project");
+	   
        sendMessage($chatId,"Hey broker, I want to.".$c,$seeshowMarkup);
        goto end;
       }
@@ -484,6 +533,7 @@ case "Take Property".$invcomma:
    if($c == 7){
        controller($chatId);
        saveptype($chatId,House);
+	   
        sendMessage($chatId,"Select no. of rooms.".$c,$bhkMarkup);
        goto end;
       }
@@ -498,6 +548,7 @@ case "Take Property".$invcomma:
    if($c == 7){
        controller($chatId);
        saveptype($chatId,Shop);
+	   
        sendMessage($chatId,"Select shop type.".$c,$shoptypeMarkup);
        goto end;
       }
@@ -522,6 +573,7 @@ case "Take Property".$invcomma:
     file_put_contents($path, $myVarsJson);
       
        saveptype($chatId,Office);
+	 
        sendMessage($chatId,"Enter no. of seats".$c,$backtoptypeMarkup);
        goto end;
       }
@@ -536,6 +588,7 @@ case "Take Property".$invcomma:
    if($c == 7){
        controller($chatId);
        saveptype($chatId,Industrial);
+	   
        sendMessage($chatId,"Select type.".$c,$indtypeMarkup);
        goto end;
       }
@@ -551,6 +604,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveshoptype($chatId,Retail);
+	   
        sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoshopMarkup);
        goto end;
       }
@@ -565,6 +619,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveshoptype($chatId,"Food outlet");
+	   
        sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoshopMarkup);
        goto end;
       }
@@ -579,6 +634,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveshoptype($chatId,"Bank/office");
+	   
        sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoshopMarkup);
        goto end;
       }
@@ -594,6 +650,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveindtype($chatId,"Cold storage");
+	  
        sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoindMarkup);
        goto end;
       }
@@ -608,6 +665,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveindtype($chatId,"Kitchen");
+	   
        sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoindMarkup);
        goto end;
       }
@@ -622,6 +680,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveindtype($chatId,"Warehouse");
+	   
        sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoindMarkup);
        goto end;
       }
@@ -636,6 +695,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveindtype($chatId,"Office space");
+	   
        sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoindMarkup);
        goto end;
       }
@@ -650,6 +710,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveindtype($chatId,"Manufacturing");
+	   
        sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoindMarkup);
        goto end;
       }
@@ -664,6 +725,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        saveindtype($chatId,"Workshop");
+	   
        sendMessage($chatId,urlencode("Enter your budget in Rupees (without any seperator)\n\n".$rightarr." for eg. 35000").$c,$backtoindMarkup);
        goto end;
       }
@@ -687,6 +749,7 @@ case "Take Property".$invcomma:
     file_put_contents($path, $myVarsJson);
       
        saveptype($chatId,Other);
+	   
        sendMessage($chatId,"Feel free to type down your requirements.".$c,$backtoptypeMarkup);
        goto end;
       }
@@ -707,6 +770,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        savebhk($chatId,"1bhk");
+	   
        sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$backtobhkMarkup);
        goto end;
       }
@@ -720,6 +784,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        savebhk($chatId,"2bhk");
+	   
        sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$backtobhkMarkup);
        goto end;
       }
@@ -734,6 +799,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        savebhk($chatId,"3bhk");
+	   
        sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$backtobhkMarkup);
        goto end;
       }
@@ -747,6 +813,7 @@ case "Take Property".$invcomma:
    if($c == 8){
        controller($chatId);
        savebhk($chatId,"4+bhk");
+	   
        sendMessage($chatId,urlencode("Enter your budgetin Rupees (without any comma)\n\n".$rightarr." for eg. 35000").$c,$backtobhkMarkup);
        goto end;
       }
@@ -865,10 +932,12 @@ case "1".$invcomma:
     
     $myVarsArr = json_decode($myVarsJson,true);
 	$myVarsArr["controller"][$chatId] = $c;
+  $exName = $myVarsArr["executive"][$message];
     
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
      
+   floki($chatId,$exName,$ragnar);  
 	 sendMessage($chatId,$rightarr." Please enter client's name ".$c);
      
 	 
@@ -956,7 +1025,7 @@ if(preg_match('/^[7-9][0-9]{9}$/',$message)){
     $path = 'voyevars.json';
         $myVarsJson = file_get_contents($path);
     $myVarsArr = json_decode($myVarsJson,true);
-  
+    $exName = $myVarsArr["executive"][$message];
      $mob_no = $myVarsArr["chat_id"][$chatId];
     
     if($myVarsArr["password"][$mob_no]==$message){
@@ -970,6 +1039,7 @@ if(preg_match('/^[7-9][0-9]{9}$/',$message)){
    file_put_contents($path, $myVarsJson);
       
      controller($chatId);
+   floki($chatId,$exName,$ragnar);  
      sendMessage($chatId,$globe." Please send your location as an attachment(click on the" .$paperclip. "icon on Telegram). We will connect you to the clients nearby.".$c);
       goto end;
       
@@ -991,7 +1061,7 @@ elseif($c == 9){
    if(preg_match('/^[1-9][0-9]{4,8}$/',$message)){
   // sendOtp($chatId,urlencode("We have sent you a 4 digit OTP.\n\n Please enter your 4 digit OTP to complete verification."),$message);
 
-     controller($chatId);
+     
      // $c = 4;
     $path = 'voyevars.json';
  
@@ -1002,6 +1072,98 @@ elseif($c == 9){
     //$myVarsArr["controller"][$chatId] = $c;
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
+	controller($chatId);
+	sendMessage($chatId,urlencode("Please enter Additional Specifications".$c), $backtobudgetMarkup);
+      goto end;
+	
+   }
+   
+   else {
+       sendMessage($chatId,urlencode("You entered invalid budget.Please enter again.\n\n It should be in rupees, in range of(10000-999999999) \n ".$rightarr." For eg. 35000\n\n ".$rightarr."Click on  ".$rocket."start button below if you want to start once again."),$startMarkup);
+          goto end; 
+ 
+ }  
+   }
+	
+elseif($c == 10){
+	
+$path = 'voyevars.json';
+ 
+    $myVarsJson = file_get_contents($path);
+    $myVarsArr = json_decode($myVarsJson,true);
+
+    $myVarsArr["add_specs"][$chatId] = $message;
+    $myVarsJson = json_encode($myVarsArr);
+    file_put_contents($path, $myVarsJson);
+    controller($chatId);
+    
+	$path = 'voyevars.json';
+ 
+    $myVarsJson = file_get_contents($path);
+    $myVarsArr = json_decode($myVarsJson,true);
+	$cname = $myVarsArr["cname"][$chatId];
+	$cmob_no = $myVarsArr["cmob_no"][$chatId];
+	$ttype = $myVarsArr["ttype"][$chatId];
+	$intend = $myVarsArr["intend"][$chatId];
+	$ptype = $myVarsArr["ptype"][$chatId];
+	$budget = $myVarsArr["budget"][$chatId];
+	if($ptype == "House"){
+		
+		$bhk = $myVarsArr["bhk"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No. of rooms: ".$bhk."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtospecsMarkup);
+		goto end;	
+	}
+	elseif($ptype == "Shop"){
+		
+		$shoptype = $myVarsArr["shoptype"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Shop type: ".$shoptype."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtospecsMarkup);
+		goto end;	
+	}
+	elseif($ptype == "Office"){
+		
+		$seats = $myVarsArr["seats"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No of seats: ".$seats."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtospecsMarkup);
+		goto end;	
+	}
+	elseif($ptype == "Industrial"){
+		
+		$indtype = $myVarsArr["indtype"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Type: ".$indtype."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtospecsMarkup);
+		goto end;	
+	}
+	elseif($ptype == "Other"){
+		
+		$requirements = $myVarsArr["requirements"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Requirements: ".$requirements."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtospecsMarkup);
+		goto end;
+	}
+	
+	
+    sendMessage($chatId,"Verify your detais.",$backtospecsMarkup);
+	
+
+         goto end;
+         
+	
+}
+	
+	
+/*	
 	$cname = $myVarsArr["cname"][$chatId];
 	$cmob_no = $myVarsArr["cmob_no"][$chatId];
 	$ttype = $myVarsArr["ttype"][$chatId];
@@ -1051,7 +1213,7 @@ elseif($c == 9){
  
  
     sendMessage($chatId,$txt,$backtobudgetMarkup);
-		goto end;	
+		goto end;
 	}
 	
 	
@@ -1060,15 +1222,10 @@ elseif($c == 9){
 
          goto end;
    
-   } 
    
-  
-   else {
-       sendMessage($chatId,urlencode("You entered invalid budget.Please enter again.\n\n It should be in rupees, in range of(10000-999999999) \n ".$rightarr." For eg. 35000\n\n ".$rightarr."Click on  ".$rocket."start button below if you want to start once again."),$startMarkup);
-          goto end; 
- 
- }  
-   }
+   
+  */
+   
 
 elseif($c == -4){
    if(preg_match('/^[1-9][0-9]{1,2}$/',$message)){
@@ -1194,6 +1351,7 @@ function yocontroller($chatId){
     $myVarsArr["bhk"][$chatId] = $bhk;
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
+    floki($chatId,$bhk,$GLOBALS[ragnar]);
    }   	
  
  function saveshoptype($chatId,$type){
@@ -1206,6 +1364,7 @@ function yocontroller($chatId){
     $myVarsArr["shoptype"][$chatId] = $type;
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
+    floki($chatId,$type,$GLOBALS[ragnar]);
    } 
  
  function saveindtype($chatId,$type){
@@ -1218,9 +1377,11 @@ function yocontroller($chatId){
     $myVarsArr["indtype"][$chatId] = $type;
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
+    floki($chatId,$type,$GLOBALS[ragnar]);
    } 
  
   function saveintend($chatId,$intend){
+
      
     $path = 'voyevars.json';
  
@@ -1230,6 +1391,7 @@ function yocontroller($chatId){
     $myVarsArr["intend"][$chatId] = $intend;
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
+    floki($chatId,$intend,$GLOBALS[ragnar]);
    }   	
  
  function saveptype($chatId,$ptype){
@@ -1242,6 +1404,7 @@ function yocontroller($chatId){
     $myVarsArr["ptype"][$chatId] = $ptype;
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
+    floki($chatId,$ptype,$GLOBALS[ragnar]);
    }   	
    
    function savettype($chatId,$ttype){
@@ -1254,6 +1417,7 @@ function yocontroller($chatId){
     $myVarsArr["ttype"][$chatId] = $ttype;
     $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
+    floki($chatId,$ttype,$GLOBALS[ragnar]);
    }   	
 
  
@@ -1413,7 +1577,173 @@ sendMessage($chatId,$txt,$GLOBALS[leadMarkup]);
  
 
    }
+   function botan($chatId,$command,$content){
+      
+ $url = "https://api.botan.io/track?token=".$GLOBALS[botan_token]."&uid=".$chatId."&name=".$command;    
+    
+//$content = $GLOBALS[ragnar];
+$curl = curl_init($url);
+
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_HEADER, false);
+ 
+curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/json"));
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
+curl_setopt($curl, CURLOPT_IPRESOLVE, 'CURL_VERSION_IPV6');
+
+$json_response = curl_exec($curl); 
+
+sendMessage($chatId,$json_response);
+sendMessage($chatId,$command);
+sendMessage($chatId,$content);
+
+      
+      
+      
+   }
    
+  function vOye($chatId){
+	  
+	controller($chatId);
+	$path = 'voyevars.json';
+ 
+    $myVarsJson = file_get_contents($path);
+    $myVarsArr = json_decode($myVarsJson,true);
+	
+  $content = $myVarsArr["start"][$chatId];
+  botan($chatId,start,$content);
+
+  $mob = $myVarsArr[chat_id][$chatId];
+  $exName = $myVarsArr[executive][$mob];
+  botan($chatId,$exName,$content);
+
+  $content = $myVarsArr["location"][$chatId];
+	botan($chatId,Location,$content);
+	
+	
+	//$cname = $myVarsArr["cname"][$chatId];
+	//$cmob_no = $myVarsArr["cmob_no"][$chatId];
+	$ttype = $myVarsArr["ttype"][$chatId];
+	$intend = $myVarsArr["intend"][$chatId];
+	$ptype = $myVarsArr["ptype"][$chatId];
+	//$budget = $myVarsArr["budget"][$chatId];
+	//$add_spec = $myVarsArr["add_specs"][$chatId];
+	
+//analytics req for intend
+  $content = $myVarsArr[$intend][$chatId];
+  if($intend == "Give Property"){
+     botan($chatId,"Give_Property",$content);
+  }else{
+    botan($chatId,"Take_Property",$content);
+  }
+   
+
+//analytics req for transaction types
+  $content = $myVarsArr[$ttype][$chatId];
+if($ttype == "Under Construction Project"){
+     botan($chatId,"Under_Construction_Project",$content);
+  }elseif ($ttype == "Ready Possession Project") {
+    botan($chatId,"Ready_Possession_Project",$content);
+  }
+
+  else{
+    botan($chatId,$ttype,$content);
+  }
+ 
+
+//analytics req for property types
+	$content = $myVarsArr[$ptype][$chatId];
+  botan($chatId,$ptype,$content);
+	
+  if($ptype == "House"){
+		
+		$bhk = $myVarsArr["bhk"][$chatId];
+
+    $content = $myVarsArr[$bhk][$chatId];
+  botan($chatId,$bhk,$content);
+		//$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No. of rooms: ".$bhk."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+    
+    
+		//goto end;	
+	}
+  
+
+
+elseif($ptype == "Shop"){
+		
+		$shoptype = $myVarsArr["shoptype"][$chatId];
+     $content = $myVarsArr[$shoptype][$chatId];
+  
+  if ($shoptype == "Food outlet"){
+  botan($chatId,Food_outlet,$content);
+ }else{
+  botan($chatId,$shoptype,$content);
+ }
+    
+		//$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Shop type: ".$shoptype."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+ 
+ 
+   // sendMessage($chatId,$txt,$backtospecsMarkup);
+		//goto end;	
+	}
+/*	elseif($ptype == "Office"){
+		
+		$seats = $myVarsArr["seats"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No of seats: ".$seats."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtospecsMarkup);
+		goto end;	
+	}
+*/
+
+	elseif($ptype == "Industrial"){
+		
+		$indtype = $myVarsArr["indtype"][$chatId];
+    $content = $myVarsArr[$indtype][$chatId];
+    if ($indtype == "Office space"){
+  botan($chatId,"Office_space",$content);
+ }elseif($indtype == "Cold storage"){
+  botan($chatId,"Cold_storage",$content);
+ }
+ else{
+  botan($chatId,$indtype,$content);
+ }
+		//$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Type: ".$indtype."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+ 
+ 
+    //sendMessage($chatId,$txt,$backtospecsMarkup);
+		//goto end;	
+	}
+
+
+/*	elseif($ptype == "Other"){
+		
+		$requirements = $myVarsArr["requirements"][$chatId];
+		$txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Requirements: ".$requirements."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n");
+ 
+ 
+    sendMessage($chatId,$txt,$backtospecsMarkup);
+		goto end;
+	}
+	
+
+	  
+*/	  
+  }
+  
+  function floki($chatId,$command,$content){
+$path = 'voyevars.json';
+ 
+    $myVarsJson = file_get_contents($path);
+    $myVarsArr = json_decode($myVarsJson,true);
+
+$myVarsArr[$command][$chatId] = $content;
+    $myVarsJson = json_encode($myVarsArr);
+    file_put_contents($path, $myVarsJson);
+	  
+  }
    
    
  end:
