@@ -1116,11 +1116,21 @@ $path = 'voyevars.json';
 
 $json_data=json_decode($address);
 $full_address=$json_data->results[0]->formatted_address;
- $region=$json_data->results[0]->address_components[3]->long_name;
-  $pincode=$json_data->results[0]->address_components[8]->long_name;
+
+$myArray = explode(',', $full_address);
+
+$locality = $myArray[sizeof($myArray)-4];
+$district = $myArray[sizeof($myArray)-3];
+$locality = $locality.",".$district;
+//Delete all white spaces
+$locality=preg_replace('/\s+/', '', $locality);
+//save locality
+$myVarsArr["locality"][$chatId] = $locality;
+ //$region=$json_data->results[0]->address_components[3]->long_name;
+  //$pincode=$json_data->results[0]->address_components[8]->long_name;
 //save region and pincode
-$myVarsArr["region"][$chatId] = $region;
-$myVarsArr["pincode"][$chatId] = $pincode;  
+//$myVarsArr["region"][$chatId] = $region;
+//$myVarsArr["pincode"][$chatId] = $pincode;  
   
  $myVarsJson = json_encode($myVarsArr);
     file_put_contents($path, $myVarsJson);
@@ -1128,7 +1138,7 @@ $myVarsArr["pincode"][$chatId] = $pincode;
   if($ptype == "House"){
     
     $bhk = $myVarsArr["bhk"][$chatId];
-    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No. of rooms: ".$bhk."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$full_address."\n");
+    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No. of rooms: ".$bhk."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$locality."\n");
  
  
     sendMessage($chatId,$txt,$backtospecsMarkup);
@@ -1137,7 +1147,7 @@ $myVarsArr["pincode"][$chatId] = $pincode;
   elseif($ptype == "Shop"){
     
     $shoptype = $myVarsArr["shoptype"][$chatId];
-    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Shop type: ".$shoptype."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$full_address."\n");
+    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Shop type: ".$shoptype."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$locality."\n");
  
  
     sendMessage($chatId,$txt,$backtospecsMarkup);
@@ -1146,7 +1156,7 @@ $myVarsArr["pincode"][$chatId] = $pincode;
   elseif($ptype == "Office"){
     
     $seats = $myVarsArr["seats"][$chatId];
-    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No of seats: ".$seats."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$full_address."\n");
+    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." No of seats: ".$seats."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$locality."\n");
  
  
     sendMessage($chatId,$txt,$backtospecsMarkup);
@@ -1155,7 +1165,7 @@ $myVarsArr["pincode"][$chatId] = $pincode;
   elseif($ptype == "Industrial"){
     
     $indtype = $myVarsArr["indtype"][$chatId];
-    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Type: ".$indtype."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$full_address."\n");
+    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Type: ".$indtype."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$locality."\n");
  
  
     sendMessage($chatId,$txt,$backtospecsMarkup);
@@ -1164,7 +1174,7 @@ $myVarsArr["pincode"][$chatId] = $pincode;
   elseif($ptype == "Other"){
     
     $requirements = $myVarsArr["requirements"][$chatId];
-    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Requirements: ".$requirements."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$full_address."\n");
+    $txt = urlencode("Hi ".$fname.$GLOBALS[thumbsup]."\n Verify details below: \n\n".$rightarr." Name: ".$cname."\n".$rightarr." mobile no.: ".$cmob_no."\n".$rightarr." Transaction type: ".$ttype."\n".$rightarr." intend: ".$intend."\n".$rightarr." Property type: ".$ptype."\n".$rightarr." Requirements: ".$requirements."\n".$rightarr." Budget: ".$budget."\n".$rightarr." Additional Specs: ".$message."\n".$rightarr."Address is:".$locality."\n");
  
  
     sendMessage($chatId,$txt,$backtospecsMarkup);
@@ -1612,9 +1622,9 @@ curl_setopt($curl, CURLOPT_IPRESOLVE, 'CURL_VERSION_IPV6');
 
 $json_response = curl_exec($curl); 
 
-//sendMessage($chatId,$json_response);
-//sendMessage($chatId,$command);
-//sendMessage($chatId,$content);
+sendMessage($chatId,$json_response);
+sendMessage($chatId,$command);
+sendMessage($chatId,$content);
 
       
       
@@ -1642,9 +1652,9 @@ $json_response = curl_exec($curl);
 
 
 //analytics call for region with content of location
-  $region = $myVarsArr["region"][$chatId];
-  $region = str_replace(' ', '_', $region);
-  botan($chatId,$region,$content);
+  $locality = $myVarsArr["locality"][$chatId];
+  $locality = str_replace(' ', '_', $locality);
+  botan($chatId,$locality,$content);
   
   
   //$cname = $myVarsArr["cname"][$chatId];
